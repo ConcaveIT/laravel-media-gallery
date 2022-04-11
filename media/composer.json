@@ -6,12 +6,18 @@
             "Concaveit\\Media\\": "src/"
         }
     },
-    "require": {},
+    "require": {
+        "intervention/image": "^2.7"
+    },
     "extra": {
         "laravel": {
             "providers": [
-                "Concaveit\\Media\\MediaServiceProvider"
-            ]
+                "Concaveit\\Media\\MediaServiceProvider",
+                "Intervention\\Image\\ImageServiceProvider"
+            ],
+            "aliases": {
+                "Image": "Intervention\\Image\\Facades\\Image"
+            }
         }
     }
 }
