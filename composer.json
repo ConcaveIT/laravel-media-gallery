@@ -1,7 +1,6 @@
 {
     "name": "concaveit/media",
     "description": "A simple package for laravel media gallery for admin panel",
-	"license": "MIT",
     "autoload": {
         "psr-4": {
             "Concaveit\\Media\\": "src/"

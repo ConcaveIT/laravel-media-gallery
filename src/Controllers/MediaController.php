@@ -3,6 +3,7 @@ namespace Concaveit\Media\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Admins;
 use Intervention\Image\ImageManagerStatic as Image;
 
 use Auth;
@@ -25,9 +26,14 @@ class MediaController extends Controller{
             'fileLocation' => $request->fileLocation,
         ];
 
-        $images = \DB::table('concave_media')->orderby('id','desc')->paginate(40);
 
-        
+        $admin = Admins::where('id',\Auth::id())->first();
+        if($admin->hasRole('admin') || $admin->hasRole('superadmin')){
+            $images = \DB::table('concave_media')->orderby('id','desc')->paginate(40);
+        }else{
+            $images = \DB::table('concave_media')->orderby('id','desc')->where('uploaded_by',\Auth::id())->paginate(40);
+        }
+		
 
         foreach($images as $key => $image){
             if(file_exists(public_path().'/'.$image->file_url)){
@@ -38,16 +44,32 @@ class MediaController extends Controller{
                 $imageDimension = getimagesize($filePath);
                 $image->file_dimension =  $imageDimension[0] .'x'. $imageDimension[1];
                 $image->file_extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            }else{
-                $images->forget($key);
             }
            
         }
+
         return view('concaveit_media::gallery',compact('images','requestedData'));
     }
 
     public function refreshGallery(Request $request){
-        $images = \DB::table('concave_media')->orderby('id','desc')->paginate(40);
+
+        $admin = Admins::where('id',\Auth::id())->first();
+
+        if($admin->hasRole('admin') || $admin->hasRole('superadmin')){
+            if($keyword = $request->search){
+                $images = \DB::table('concave_media')->orderby('id','desc')->where('title','like',"%$keyword%")->get();
+            }else{
+                $images = \DB::table('concave_media')->orderby('id','desc')->paginate(40);
+            }
+            
+        }else{
+            if($keyword = $request->search){
+                $images = \DB::table('concave_media')->orderby('id','desc')->where('uploaded_by',\Auth::id())->where('title','like',"%$keyword%")->get();
+            }else{
+                $images = \DB::table('concave_media')->orderby('id','desc')->where('uploaded_by',\Auth::id())->paginate(40);
+            }
+        }
+		
         
         foreach($images as $key => $image){
             if(file_exists(public_path().'/'.$image->file_url)){
@@ -86,7 +108,8 @@ class MediaController extends Controller{
             $imageTitle = uniqid();
             $imageName = $imageTitle. '.' . $request->file->getClientOriginalExtension();
             $image_resize = Image::make($uploadedImage->getRealPath());
-            
+            $image_thumbnail = Image::make($uploadedImage->getRealPath())->fit(230,230);
+
             if($request->imageResize  == 'true' ){
                 $image_resize->fit($request->imageWidth, $request->imageHeight);
             }    
@@ -101,14 +124,15 @@ class MediaController extends Controller{
                 $filePath = 'media/'.$imageName;
             }
 
-            
+            $image_thumbnail->save(public_path('/media/thumbnail/media/'.$imageName),60);
 
         }
 
         if( $upload_success ) {
             $data = [
-                'title' =>  $imageTitle,
+                'title' =>  str_replace('.'.$request->file->getClientOriginalExtension(),'',$request->file->getClientOriginalName()),
                 'file_url' => $filePath,
+                'thumbnail_url' => '/media/thumbnail/media/'.$imageName,
                 'uploaded_by' => \Auth::id(),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -128,9 +152,43 @@ class MediaController extends Controller{
         $fileUrl = $data->file_url;
         $Originalfile =  public_path().'/'.$fileUrl;
         \DB::table('concave_media')->delete($id);
-        unlink($Originalfile);
+        
+        if(file_exists($Originalfile)){
+            unlink($Originalfile);
+        }
+        
         return response()->json('success', 200);
     }
+
+    public function delete_multiple_files($id){
+        $ids = explode(',',$id);
+        $allData = \DB::table('concave_media')->whereIn('id',$ids)->get();
+        
+        foreach($allData as $data){
+            $fileUrl = $data->file_url;
+            $thumbnail_url = $data->thumbnail_url;
+
+            if( $thumbnail_url){
+                $OriginalfileThumbnail =  public_path().'/'.$thumbnail_url;
+                if(file_exists($OriginalfileThumbnail)){
+                    unlink($OriginalfileThumbnail);
+                }
+            }
+
+            if($fileUrl){
+                $Originalfile =  public_path().'/'.$fileUrl;
+                \DB::table('concave_media')->delete($data->id);
+                if(file_exists($Originalfile)){
+                    unlink($Originalfile);
+                }
+            }
+
+        }
+
+        return response()->json('success', 200);
+    }
+
+    
 
     public function update_file(Request $request){
        

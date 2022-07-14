@@ -43,12 +43,15 @@
         if(itemCount > 1){
             
             var totalFilesize = 0;
+            var selectedMedia = '';
             jQuery('.concave_selected').each(function(key,val){
                 totalFilesize+=  parseInt(jQuery(this).attr('data-filesize'));
+                selectedMedia += jQuery(this).attr('data-file-id')+',';
             });
 
             html = '<p><b>Files:</b> '+itemCount+' Files Selected.</p>'+
-                   '<p><b>Total File Size:</b> '+totalFilesize+' KB</p>';
+                   '<p><b>Total File Size:</b> '+totalFilesize+' KB</p>'+
+                   '<p><button data-selected-files="'+selectedMedia+'" class="c_btn c_multiple_delete_btn">Delete All</button></p>';
 
         }else{
             var fileName = jQuery(this).attr('data-filename');
@@ -155,6 +158,26 @@
         });
     });
 
+    jQuery(document).on('click','.c_multiple_delete_btn',function(){
+        jQuery.ajax({
+            url: "/concave-media/delete/multiple/"+jQuery(this).attr('data-selected-files'),
+                type: "post",
+                data: {} ,
+                success: function (response) {
+                    if(response == 'success'){
+                        jQuery('.concave_selected').remove();
+                        jQuery('.concave_media_body_right').html('');
+                    }
+                    
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+        });
+    });
+
+    
+
     jQuery(document).on('submit','#update_meta',function(e){
         e.preventDefault();
         jQuery('.c_message').remove();
@@ -219,6 +242,30 @@
                     }
             });
         }
-    });   
+    }); 
+    
+    
+    jQuery(document).on('keyup','#search_media',function(){
+        jQuery('.read_more').attr('data-page-number',1);
+        jQuery('.read_more').hide();
+        var keyword = jQuery(this).val();
+        
+        if(keyword == ''){
+            jQuery('.read_more').show(); 
+        }
+
+        jQuery.ajax({
+            url: "/concave-gallery-refresh?search="+keyword,
+                type: "get",
+                data: {page:1} ,
+                success: function (response) {
+                    jQuery('.concave_media_body_left ul').html(response);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+        });
+    });
+
 </script>
 
