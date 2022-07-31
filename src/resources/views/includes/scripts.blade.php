@@ -72,7 +72,7 @@
                     '<p><b>Dimension</b> (width x height): '+fileDimension+'</p>'+
                     '<p><b>Upload Time:</b> '+fileUploadTime+'</p>'+
                     '<p><button data-file-id="'+fileId+'" class="c_btn c_delete_btn">Delete</button></p><hr>'+
-                    '<div class="update_meta"><h5>UPDATE META INFORMATION</h5><form id="update_meta">'+
+                    '<div class="update_meta"><h5>UPDATE META INFORMATION</h5><form id="update_meta">@csrf'+
                         '<input type="hidden" name="id" value="'+fileId+'"><br>'+
                         'Title: <br><input type="text" name="title" value="'+fileName+'" placeholder="Title"><br>'+
                         'Alt Text: <br><input type="text" name="altText" value="'+fileAlt+'" placeholder="Alt Text"><br>'+
