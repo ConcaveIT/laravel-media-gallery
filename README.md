@@ -1,14 +1,16 @@
-Add bellow codes to master.blade.php in before body tag ends--
-
-
 ## INSTALLATION
 
 Install the package through [Composer](http://getcomposer.org/).
 
-For Laravel 5.1~:
+For Laravel:
 `composer require concaveit/media`
 
+## PREREQUISITES
+  1. "spatie/laravel-permission" package
+  2. jQuery Installed and placed before initialization code
+
 ## CONFIGURATION
+Add bellow codes to "master.blade.php"  before body tag ends. Please make sure that you have use "spatie/laravel-permission" package for permission management. if you use other package for permission management you can have to overwrite the package code. 
 
 ```php
 
