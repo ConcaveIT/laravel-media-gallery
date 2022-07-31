@@ -1,6 +1,6 @@
 Add bellow codes to master.blade.php in before body tag ends--
 
-
+ @include('concaveit_media::includes/styles')
 <script>
       jQuery(document).on('click','.initConcaveMedia',function(){
          var inputName,inputType,imageWidth,imageHeight;
@@ -24,15 +24,22 @@ Add bellow codes to master.blade.php in before body tag ends--
                   console.log(textStatus, errorThrown);
                 }
           });
-      })
-  </script>
+      });
+      jQuery(document).ready(function() {
+          jQuery('.initConcaveMedia').each(function(key, val) {
+              var widthText = jQuery(this).attr('data-image-width');
+              var heightText = jQuery(this).attr('data-image-height');
+              jQuery(this).after('<small style="color:red;font-style:italic;margin-left: 10px;white-space: nowrap;">Image Size (width:' + widthText + ' X height:' + heightText + ')</small>');
+          });
+      });
 
-    @include('concaveit_media::includes/styles')
-   <script>
       jQuery(document).on('click','.selected_image_remove',function(){
          var removeItem = jQuery(this).attr('data-file-url');
          jQuery(this).closest('span').remove();
          jQuery('input[value="'+removeItem+'"]').remove();
       });
-   </script>
+  </script>
+
+
+
 
