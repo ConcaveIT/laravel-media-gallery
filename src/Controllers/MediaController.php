@@ -3,7 +3,7 @@ namespace Concaveit\Media\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Admins;
+use App\Models\User;
 use Intervention\Image\ImageManagerStatic as Image;
 
 use Auth;
@@ -27,7 +27,7 @@ class MediaController extends Controller{
         ];
 
 
-        $admin = Admins::where('id',\Auth::id())->first();
+        $admin = User::where('id',\Auth::id())->first();
         if($admin->hasRole('admin') || $admin->hasRole('superadmin')){
             $images = \DB::table('concave_media')->orderby('id','desc')->paginate(40);
         }else{
@@ -53,7 +53,7 @@ class MediaController extends Controller{
 
     public function refreshGallery(Request $request){
 
-        $admin = Admins::where('id',\Auth::id())->first();
+        $admin = User::where('id',\Auth::id())->first();
 
         if($admin->hasRole('admin') || $admin->hasRole('superadmin')){
             if($keyword = $request->search){
