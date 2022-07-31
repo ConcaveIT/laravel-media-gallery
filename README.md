@@ -1,6 +1,18 @@
 Add bellow codes to master.blade.php in before body tag ends--
 
- @include('concaveit_media::includes/styles')
+
+## INSTALLATION
+
+Install the package through [Composer](http://getcomposer.org/).
+
+For Laravel 5.1~:
+`composer require concaveit/media`
+
+## CONFIGURATION
+
+```php
+
+@include('concaveit_media::includes/styles')
 <script>
       jQuery(document).on('click','.initConcaveMedia',function(){
          var inputName,inputType,imageWidth,imageHeight;
@@ -40,6 +52,7 @@ Add bellow codes to master.blade.php in before body tag ends--
       });
   </script>
 
+```
 
 
 
