@@ -96,12 +96,8 @@ class MediaController extends Controller{
 		    'file' => 'image|max:10000',
 		);
 
-        $mediaDir = public_path().'/media';
         $thumbnailDir = public_path().'/media/thumbnail/media';
-        if(!is_dir($mediaDir)) mkdir( $mediaDir,0777 );
-        if(!is_dir($thumbnailDir)) mkdir( $thumbnailDir,0777 );
-
-
+        if(!is_dir($thumbnailDir)) mkdir($thumbnailDir,0777,true);
 
 		$validation = Validator::make($input, $rules);
 
