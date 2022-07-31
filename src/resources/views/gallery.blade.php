@@ -27,6 +27,7 @@
         
             <div id="c_upload_media" class="upload_files c_tab_items">
                 <form action="{{ route('concave.media.upload')}}" method="post" class="dropzone" id="my-awesome-dropzone">
+                    @csrf
                     <input type="hidden" name="imageWidth" value="{{$requestedData['imageWidth']}}">
                     <input type="hidden" name="imageHeight" value="{{$requestedData['imageHeight']}}" >
                     <input type="hidden" name="imageResize" value="{{$requestedData['imageResize']}}" >
