@@ -91,11 +91,17 @@ class MediaController extends Controller{
 
     public function uploadfiles(Request $request){
 
-
 		$input = $request->all();
 		$rules = array(
 		    'file' => 'image|max:10000',
 		);
+
+        $mediaDir = public_path().'/media';
+        $thumbnailDir = public_path().'/media/thumbnail/media';
+        if(!is_dir($mediaDir)) mkdir( $mediaDir,0777 );
+        if(!is_dir($thumbnailDir)) mkdir( $thumbnailDir,0777 );
+
+
 
 		$validation = Validator::make($input, $rules);
 
