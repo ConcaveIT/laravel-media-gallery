@@ -72,7 +72,7 @@
                     '<p><b>Dimension</b> (width x height): '+fileDimension+'</p>'+
                     '<p><b>Upload Time:</b> '+fileUploadTime+'</p>'+
                     '<p><button data-file-id="'+fileId+'" class="c_btn c_delete_btn">Delete</button></p><hr>'+
-                    '<div class="update_meta"><h5>UPDATE META INFORMATION</h5><form id="update_meta">@csrf'+
+                    '<div class="update_meta"><h5>UPDATE META INFORMATION</h5><form id="update_meta">'+
                         '<input type="hidden" name="id" value="'+fileId+'"><br>'+
                         'Title: <br><input type="text" name="title" value="'+fileName+'" placeholder="Title"><br>'+
                         'Alt Text: <br><input type="text" name="altText" value="'+fileAlt+'" placeholder="Alt Text"><br>'+
@@ -101,7 +101,13 @@
         jQuery('.concave_selected').each(function(key,val){
             var fileUrl = jQuery(this).attr('data-file-url');
             var fileId = jQuery(this).attr('data-file-id');
-            displayHtml += '<span><input type="hidden" value="'+fileUrl+'" name="'+inputName+'"><img src="'+base_url+'/'+fileUrl+'"> <b data-file-url='+fileUrl+' class="selected_image_remove">X</b></span>';
+            var fileType = jQuery(this).attr('data-file-type');
+            if(fileType == 'image'){
+                displayHtml += '<span><input type="hidden" value="'+fileUrl+'" name="'+inputName+'"><img src="'+base_url+'/'+fileUrl+'"> <b data-file-url='+fileUrl+' class="selected_image_remove">X</b></span>';
+            }else{
+                displayHtml += '<span><input type="hidden" value="'+fileUrl+'" name="'+inputName+'"><img src="'+base_url+'/fileico.png"> <b data-file-url='+fileUrl+' class="selected_image_remove">X</b></span>';
+            }
+            
         });
         displayHtml += '</p>';
 

@@ -13,10 +13,10 @@
 
 <section id="concave_media_gallery">
     <div class="concave_media_header">
-        <h5>ADD IMAGES TO GALLERY</h5>
+        <h5>ADD MEDIA TO GALLERY</h5>
         <p class="search_media"><input type="text" id="search_media" name="search_media" placeholder="Search Media.." class="form-control"></p>
         <ul class="concave_media_tab">
-            <li data-should-show="c_upload_media" class="media_upload_refresh">Upload Image</li>
+            <li data-should-show="c_upload_media" class="media_upload_refresh">Upload Media</li>
             <li data-should-show="c_media_gallery" class="c_active_tab media_gallery_refresh">Media Gallery</li>
         </ul>
         <span class="concave_close">X</span>

@@ -21,6 +21,7 @@ class CreateConcaveMediaTable extends Migration
             $table->text('file_url')->nullable();
             $table->text('thumbnail_url')->nullable();
             $table->integer('uploaded_by')->nullable();
+            $table->string('type',128)->nullable()->default('image');
             $table->timestamps();
         });
     }
